@@ -682,7 +682,7 @@ static void ui_draw_vision_speed(UIState *s) {
   }
   
   
-
+  /*
   //uptime
   nvgBeginPath(s->vg);
   nvgFontFace(s->vg, "sans-bold");
@@ -799,7 +799,7 @@ static void ui_draw_vision_speed(UIState *s) {
   
   direction[2] = '\0';
   nvgText(s->vg, viz_speed_x+viz_speed_w/2, 70, direction, NULL);
-
+  */
 }
 
 static void ui_draw_vision_event(UIState *s) {
