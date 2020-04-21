@@ -68,7 +68,7 @@ static void ui_draw_sidebar_ip_addr(UIState *s, bool hasSidebar) {
   char network_ip_str[15];
   snprintf(network_ip_str, sizeof(network_ip_str), "%s", s->scene.ipAddr);
   nvgFillColor(s->vg, COLOR_WHITE);
-  nvgFontSize(s->vg, 30);
+  nvgFontSize(s->vg, 32*0.9);
   nvgFontFace(s->vg, "sans-regular");
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   nvgTextBox(s->vg, network_ip_x, network_ip_y, network_ip_w, network_ip_str, NULL);
@@ -101,7 +101,7 @@ static void ui_draw_sidebar_battery_text(UIState *s, bool hasSidebar) {
   const int battery_img_h = 36;
   const int battery_img_w = 96;
   const int battery_img_x = hasSidebar ? 150 : -(sbr_w);
-  const int battery_img_y = 305;
+  const int battery_img_y = 303;
 
   char battery_str[7];
   snprintf(battery_str, sizeof(battery_str), "%d%%%s", s->scene.batteryPercent, strcmp(s->scene.batteryStatus, "Charging") == 0 ? "+" : "-");
