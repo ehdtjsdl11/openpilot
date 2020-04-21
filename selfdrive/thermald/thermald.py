@@ -411,7 +411,7 @@ def thermald_thread():
         off_ts = sec_since_boot()
         os.system('echo powersave > /sys/class/devfreq/soc:qcom,cpubw/governor')
 
-      if msg.thermal.batteryStatus == "Discharging" and started_seen and (sec_since_boot() - off_ts) > 3:
+      if msg.thermal.batteryStatus == "Discharging" and started_seen and (sec_since_boot() - off_ts) = 3:
         subprocess.Popen([mediaplayer + 'mediaplayer', '/data/openpilot/selfdrive/assets/sounds/finish.wav'], shell = False, stdin=None, stdout=None, stderr=None, env = env, close_fds=True)
 
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
