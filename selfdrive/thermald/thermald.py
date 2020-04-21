@@ -284,15 +284,15 @@ def thermald_thread():
     # **** starting logic ****
 
     # Check for last update time and display alerts if needed
-#    now = datetime.datetime.now()
+    now = datetime.datetime.now()
 
     # show invalid date/time alert
-#    time_valid = now.year >= 2019
-#    if time_valid and not time_valid_prev:
-#      params.delete("Offroad_InvalidTime")
-#    if not time_valid and time_valid_prev:
-#      params.put("Offroad_InvalidTime", json.dumps(OFFROAD_ALERTS["Offroad_InvalidTime"]))
-#    time_valid_prev = time_valid
+    time_valid = now.year >= 2019
+    if time_valid and not time_valid_prev:
+      params.delete("Offroad_InvalidTime")
+    if not time_valid and time_valid_prev:
+      params.put("Offroad_InvalidTime", json.dumps(OFFROAD_ALERTS["Offroad_InvalidTime"]))
+    time_valid_prev = time_valid
 
     # Show update prompt
 #    try:
