@@ -8,7 +8,7 @@ from smbus2 import SMBus
 from cereal import log
 from common.android import ANDROID, get_network_type, get_network_strength
 from common.basedir import BASEDIR
-from common.params import Params
+from common.params import Params, put_nonblocking
 from common.realtime import sec_since_boot, DT_TRML
 from common.numpy_fast import clip, interp
 from common.filter_simple import FirstOrderFilter
@@ -24,6 +24,7 @@ from selfdrive.thermald.power_monitoring import PowerMonitoring, get_battery_cap
 FW_SIGNATURE = get_expected_signature()
 
 import subprocess
+import re
 import time
 
 ThermalStatus = log.ThermalData.ThermalStatus
@@ -217,6 +218,9 @@ def thermald_thread():
 
   # ip addr
   ts_last_ip = None
+  ts_last_update_vars = 0
+  ts_last_charging_ctrl = None
+  dp_last_modified = None
   ip_addr = '255.255.255.255'
 
   while 1:
@@ -302,15 +306,15 @@ def thermald_thread():
     # **** starting logic ****
 
     # Check for last update time and display alerts if needed
-#    now = datetime.datetime.now()
-#
-#    # show invalid date/time alert
-#    time_valid = now.year >= 2019
-#    if time_valid and not time_valid_prev:
-#      params.delete("Offroad_InvalidTime")
-#    if not time_valid and time_valid_prev:
-#      params.put("Offroad_InvalidTime", json.dumps(OFFROAD_ALERTS["Offroad_InvalidTime"]))
-#    time_valid_prev = time_valid
+    now = datetime.datetime.now()
+
+    # show invalid date/time alert
+    time_valid = now.year >= 2019
+    if time_valid and not time_valid_prev:
+      params.delete("Offroad_InvalidTime")
+    if not time_valid and time_valid_prev:
+      params.put("Offroad_InvalidTime", json.dumps(OFFROAD_ALERTS["Offroad_InvalidTime"]))
+    time_valid_prev = time_valid
 
     # Show update prompt
 #    try:
@@ -359,7 +363,7 @@ def thermald_thread():
     should_start = should_start and accepted_terms and completed_training and (not do_uninstall)
 
     # check for firmware mismatch
-    #should_start = should_start and fw_version_match
+    should_start = should_start and fw_version_match
 
     # check if system time is valid
     should_start = should_start and time_valid
