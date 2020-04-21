@@ -229,6 +229,7 @@ static void ui_init_vision(UIState *s, const VisionStreamBufs back_bufs,
       .front_box_height = ui_info.front_box_height,
       .world_objects_visible = false,  // Invisible until we receive a calibration message.
       .gps_planner_active = false,
+      .recording = false,
   };
 
   s->rgb_width = back_bufs.width;
@@ -989,8 +990,9 @@ int main(int argc, char* argv[]) {
       s->scene.hwType = cereal_HealthData_HwType_unknown;
     }
 
-    // Don't waste resources on drawing in case screen is off
-    if (s->awake) {
+    // Don't waste resources on drawing in case screen is off or car is not started.
+    if (s->awake && s->vision_connected) {
+      dashcam(s, touch_x, touch_y);
       ui_draw(s);
       glFinish();
       should_swap = true;
