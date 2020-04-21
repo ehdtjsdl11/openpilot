@@ -224,6 +224,7 @@ def thermald_thread():
   ip_addr = '255.255.255.255'
 
   while 1:
+    ts = sec_since_boot()
     health = messaging.recv_sock(health_sock, wait=True)
     location = messaging.recv_sock(location_sock)
     location = location.gpsLocation if location else None
