@@ -23,6 +23,8 @@ from selfdrive.thermald.power_monitoring import PowerMonitoring, get_battery_cap
 
 FW_SIGNATURE = get_expected_signature()
 
+import subprocess
+
 ThermalStatus = log.ThermalData.ThermalStatus
 NetworkType = log.ThermalData.NetworkType
 NetworkStrength = log.ThermalData.NetworkStrength
