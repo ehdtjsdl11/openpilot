@@ -37,6 +37,7 @@ DAYS_NO_CONNECTIVITY_PROMPT = 4  # send an offroad prompt after 4 days with no i
 LEON = False
 last_eon_fan_val = None
 
+mediaplayer = '/data/openpilot/selfdrive/dragonpilot/mediaplayer/'
 
 with open(BASEDIR + "/selfdrive/controls/lib/alerts_offroad.json") as json_file:
   OFFROAD_ALERTS = json.load(json_file)
@@ -223,6 +224,9 @@ def thermald_thread():
   dp_last_modified = None
   ip_addr = '255.255.255.255'
 
+  env = dict(os.environ)
+  env['LD_LIBRARY_PATH'] = mediaplayer
+
   while 1:
     ts = sec_since_boot()
     health = messaging.recv_sock(health_sock, wait=True)
@@ -406,6 +410,9 @@ def thermald_thread():
       if off_ts is None:
         off_ts = sec_since_boot()
         os.system('echo powersave > /sys/class/devfreq/soc:qcom,cpubw/governor')
+
+      if msg.thermal.batteryStatus == "Discharging" and started_seen and (sec_since_boot() - off_ts) > 3:
+        subprocess.Popen([mediaplayer + 'mediaplayer', '/data/openpilot/selfdrive/assets/sounds/finish.wav'], shell = False, stdin=None, stdout=None, stderr=None, env = env, close_fds=True)
 
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
       # more than a minute but we were running
