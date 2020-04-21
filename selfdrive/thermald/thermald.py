@@ -37,7 +37,7 @@ DAYS_NO_CONNECTIVITY_PROMPT = 4  # send an offroad prompt after 4 days with no i
 LEON = False
 last_eon_fan_val = None
 
-mediaplayer = '/data/openpilot/selfdrive/dragonpilot/mediaplayer/'
+mediaplayer = '/data/openpilot/selfdrive/kyd/mediaplayer/'
 
 with open(BASEDIR + "/selfdrive/controls/lib/alerts_offroad.json") as json_file:
   OFFROAD_ALERTS = json.load(json_file)
