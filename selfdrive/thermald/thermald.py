@@ -23,6 +23,8 @@ from selfdrive.thermald.power_monitoring import PowerMonitoring, get_battery_cap
 
 FW_SIGNATURE = get_expected_signature()
 
+import subprocess
+
 ThermalStatus = log.ThermalData.ThermalStatus
 NetworkType = log.ThermalData.NetworkType
 NetworkStrength = log.ThermalData.NetworkStrength
@@ -212,7 +214,12 @@ def thermald_thread():
   params = Params()
   pm = PowerMonitoring(is_uno)
 
+  # ip addr
+  ts_last_ip = None
+  ip_addr = '255.255.255.255'
+
   while 1:
+    ts = sec_since_boot()
     health = messaging.recv_sock(health_sock, wait=True)
     location = messaging.recv_sock(location_sock)
     location = location.gpsLocation if location else None
@@ -250,6 +257,17 @@ def thermald_thread():
       msg.thermal.batteryPercent = 100
       msg.thermal.batteryStatus = "Charging"
 
+    # update ip every 10 seconds
+    ts = sec_since_boot()
+    if ts_last_ip is None or ts - ts_last_ip >= 10.:
+      try:
+        result = subprocess.check_output(["ifconfig", "wlan0"], encoding='utf8')  # pylint: disable=unexpected-keyword-arg
+        ip_addr = re.findall(r"inet addr:((\d+\.){3}\d+)", result)[0][0]
+      except:
+        ip_addr = 'N/A'
+      ts_last_ip = ts
+    msg.thermal.ipAddr = ip_addr
+
     current_filter.update(msg.thermal.batteryCurrent / 1e6)
 
     # TODO: add car battery voltage check
@@ -284,15 +302,15 @@ def thermald_thread():
     # **** starting logic ****
 
     # Check for last update time and display alerts if needed
-    now = datetime.datetime.now()
-
-    # show invalid date/time alert
-    time_valid = now.year >= 2019
-    if time_valid and not time_valid_prev:
-      params.delete("Offroad_InvalidTime")
-    if not time_valid and time_valid_prev:
-      params.put("Offroad_InvalidTime", json.dumps(OFFROAD_ALERTS["Offroad_InvalidTime"]))
-    time_valid_prev = time_valid
+#    now = datetime.datetime.now()
+#
+#    # show invalid date/time alert
+#    time_valid = now.year >= 2019
+#    if time_valid and not time_valid_prev:
+#      params.delete("Offroad_InvalidTime")
+#    if not time_valid and time_valid_prev:
+#      params.put("Offroad_InvalidTime", json.dumps(OFFROAD_ALERTS["Offroad_InvalidTime"]))
+#    time_valid_prev = time_valid
 
     # Show update prompt
 #    try:
