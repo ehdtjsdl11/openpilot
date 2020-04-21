@@ -106,7 +106,7 @@ static void ui_draw_sidebar_battery_text(UIState *s, bool hasSidebar) {
   char battery_str[7];
   snprintf(battery_str, sizeof(battery_str), "%d%%%s", s->scene.batteryPercent, strcmp(s->scene.batteryStatus, "Charging") == 0 ? "+" : "-");
   nvgFillColor(s->vg, COLOR_WHITE);
-  nvgFontSize(s->vg, 38);
+  nvgFontSize(s->vg, 36);
   nvgFontFace(s->vg, "sans-regular");
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   nvgTextBox(s->vg, battery_img_x, battery_img_y, battery_img_w, battery_str, NULL);
